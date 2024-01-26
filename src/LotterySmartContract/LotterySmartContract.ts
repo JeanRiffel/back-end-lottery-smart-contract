@@ -2,7 +2,7 @@ import Web3 from 'web3';
 
 class LotterySmartContract {
   private web3: Web3;
-  private contractAddress = '0x26Af1569a671Afd120ac60FC73CF3A8A4065CFD9';
+  private contractAddress = '0x19313e6C58fb0E80030FEa647807c95771D5281C';
   private provider: string = 'HTTP://127.0.0.1:7545';
   private abi: any[] = [
   {
@@ -104,6 +104,7 @@ class LotterySmartContract {
   }
 
   public getContractAddress(): any {
+    console.log('------<<<<<<')
     return this.contractAddress;
   }
 }

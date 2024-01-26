@@ -17,4 +17,10 @@ export class LotteryController {
   postWinner(@Body() winnerDTO: WinnerDTO): string {
     return 'Posted ' + winnerDTO.name;
   }
+
+  @Get('contract-name')
+  async getContractName(): Promise<string> {
+    const contractName = await this.lotteryService.getContractName();
+    return contractName;
+  }
 }
