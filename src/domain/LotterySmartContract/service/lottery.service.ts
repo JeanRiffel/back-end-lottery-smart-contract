@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import LotterySmartContract from './LotterySmartContract';
-import { Bet } from './Bet';
-import { DefaultErrors } from './enumHelper';
+import LotterySmartContract from '../entity/LotterySmartContract';
+import { Bet } from '../interface/Bet';
+import { DefaultErrors } from '../utils/enumHelper';
+import ContractDetailsLottery from '../infra/ContractDetailsLottery';
+import Web3Conn from '../infra/Web3Conn';
 
 @Injectable()
 export class LotteryService {
@@ -9,7 +11,17 @@ export class LotteryService {
   private _contract: any;
 
   constructor() {
-    this._lotterySmartContract = new LotterySmartContract();
+    const contractDetailsLottery = new ContractDetailsLottery();
+
+    const web3Conn = new Web3Conn(
+      contractDetailsLottery.getContractServerProvider(),
+    );
+
+    this._lotterySmartContract = new LotterySmartContract(
+      contractDetailsLottery,
+      web3Conn,
+    );
+
     this._contract = this._lotterySmartContract.getContract();
   }
 
@@ -33,17 +45,25 @@ export class LotteryService {
 
   async placeBet(bet: Bet): Promise<string> {
     try {
+
       const { betValue, betAmount, address } = bet;
 
       const wei = this._lotterySmartContract.getToWei(betAmount);
       const result = await this._contract.methods.enter().send({
         from: address,
+        gasPrice: this._lotterySmartContract.getToWei('0.1'),
         value: wei,
       });
 
       return result;
     } catch (error) {
-      return DefaultErrors.BetError;
+      return DefaultErrors.BetError.concat(error);
     }
   }
+
+  async getPlayers(): Promise<string> {
+    const players = await this._contract.methods.getPlayers().call();
+    return players;
+  }
+
 }
