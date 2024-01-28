@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { LotteryService } from './lottery.service';
-import { WinnerDTO } from './winner.dto';
+import { LotteryService } from '../service/lottery.service';
+import { WinnerDTO } from '../dto/winner.dto';
+import { Bet } from '../interface/Bet';
 
 @Controller('lottery')
 export class LotteryController {
@@ -18,9 +19,22 @@ export class LotteryController {
     return 'Posted ' + winnerDTO.name;
   }
 
+  @Post('place-bet')
+  async placeBet(@Body() bet: Bet): Promise<string>{
+    const result = await this.lotteryService.placeBet(bet);
+    return result;
+  }
+
   @Get('contract-name')
   async getContractName(): Promise<string> {
     const contractName = await this.lotteryService.getContractName();
     return contractName;
   }
+
+  @Get('players')
+  async getPlayers(): Promise<string> {
+    const contractName = await this.lotteryService.getPlayers();
+    return contractName;
+  }
+
 }

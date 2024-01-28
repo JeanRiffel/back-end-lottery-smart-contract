@@ -1,5 +1,5 @@
 export interface Bet {
-  betValue: string;
+  betValue: number;
   betAmount: number;
   address: string;
 }
