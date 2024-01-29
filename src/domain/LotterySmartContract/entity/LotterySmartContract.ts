@@ -1,30 +1,47 @@
+import { Bet } from '../interface/Bet';
 import ContractDetails from './ContractDetails';
 import Web3Connection from './Web3Connection';
 
 class LotterySmartContract {
-  private web3: Web3Connection;
-  private contractAddress = '';
-  private abi: any[] = [];
+  private _contract: any;
+  private _web3: any;
 
-  public constructor(contractDetails: ContractDetails, web3Conn: Web3Connection)
-  {
-    this.web3 = web3Conn;
-    this.contractAddress = contractDetails.getContractAddress();
-    this.abi = contractDetails.getABI();
+  public constructor(
+    contractDetails: ContractDetails,
+    web3Conn: Web3Connection,
+  ) {
+    const abi = contractDetails.getABI();
+    const contractAddress = contractDetails.getContractAddress();
+    this._web3 = web3Conn.getConnection();
+    this._contract = new this._web3.eth.Contract(abi, contractAddress);
   }
 
-  public getContract(): any {
-    const web3Eth = this.web3.eth();
-    return new web3Eth.Contract(this.abi, this.contractAddress);
+  public async contractName(): Promise<any> {
+    const result = await this._contract.methods.contractName().call();
+    return result;
   }
 
-  public getToWei(value: any): any {
-    const web3Utils = this.web3.utils();
-    return web3Utils.toWei(value, 'ether');
+  public async getPlayers(): Promise<any> {
+    const result = await this._contract.methods.getPlayers().call();
+    return result;
   }
 
-  public getContractAddress(): any {
-    return this.contractAddress;
+  public async pickWinner(): Promise<any> {
+    const result = await this._contract.methods.pickWinner().call();
+    return result;
+  }
+
+  public async enter(bet: Bet): Promise<any> {
+    const valueWei = this._web3.utils.toWei(bet.betAmount, 'ether');
+
+    const payload = {
+      value: valueWei,
+      from: bet.addressFrom,
+    };
+
+    const result = await this._contract.methods.enter().send(payload);
+
+    return result;
   }
 }
 

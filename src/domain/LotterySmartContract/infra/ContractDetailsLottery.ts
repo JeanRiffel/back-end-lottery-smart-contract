@@ -2,7 +2,7 @@ import ContractDetails from '../entity/ContractDetails';
 
 class ContractDetailsLottery implements ContractDetails {
   public getContractAddress(): string {
-    return '0x117Afb79FE49e578ab73F1f0375EeF5Ac6eB1efF';
+    return '0x0aE6B04f0FF046b137155013a901A2880878E92c';
   }
 
   public getContractServerProvider(): string {

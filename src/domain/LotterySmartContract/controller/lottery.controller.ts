@@ -8,8 +8,8 @@ export class LotteryController {
   constructor(private readonly lotteryService: LotteryService) {}
 
   @Get('winner')
-  async getWinner(): Promise<string> {
-    const winner = await this.lotteryService.getWinner();
+  async pickWinner(): Promise<string> {
+    const winner = await this.lotteryService.pickWinner();
 
     return winner;
   }
