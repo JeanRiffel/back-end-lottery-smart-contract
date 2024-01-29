@@ -8,14 +8,6 @@ class Web3Conn implements Web3Connection {
     this.web3 = new Web3(new Web3.providers.HttpProvider(provider));
   }
 
-  eth() {
-    return this.web3.eth;
-  }
-
-  utils() {
-    return this.web3.utils;
-  }
-
   getConnection(): Web3 {
     return this.web3;
   }

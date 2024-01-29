@@ -2,42 +2,30 @@ import { Injectable } from '@nestjs/common';
 import LotterySmartContract from '../entity/LotterySmartContract';
 import { Bet } from '../interface/Bet';
 import { DefaultErrors } from '../utils/enumHelper';
-import ContractDetailsLottery from '../infra/ContractDetailsLottery';
-import Web3Conn from '../infra/Web3Conn';
+import LotteryFactory from '../factory/LotteryFactory';
 
 @Injectable()
 export class LotteryService {
   private _lotterySmartContract: LotterySmartContract;
-  private _contract: any;
 
   constructor() {
-    const contractDetailsLottery = new ContractDetailsLottery();
-
-    const web3Conn = new Web3Conn(
-      contractDetailsLottery.getContractServerProvider(),
-    );
-
-    this._lotterySmartContract = new LotterySmartContract(
-      contractDetailsLottery,
-      web3Conn,
-    );
-
-    this._contract = this._lotterySmartContract.getContract();
+    const lotteryFactory = new LotteryFactory();
+    this._lotterySmartContract = lotteryFactory.getSmartContract();
   }
 
-  async getWinner(): Promise<string> {
+  async pickWinner(): Promise<string> {
     try {
-      const winner = await this._contract.methods.pickWinner().call();
-      return winner;
+      const result = await this._lotterySmartContract.pickWinner();
+      return result;
     } catch (error) {
-      return DefaultErrors.WinnerNotRetrivied;
+      return DefaultErrors.WinnerNotRetrivied.concat(` ${error} `);
     }
   }
 
   async getContractName(): Promise<string> {
     try {
-      const data = await this._contract.methods.contractName().call();
-      return data;
+      const result = await this._lotterySmartContract.contractName();
+      return result;
     } catch (error) {
       return DefaultErrors.RetrieveContractName;
     }
@@ -45,16 +33,7 @@ export class LotteryService {
 
   async placeBet(bet: Bet): Promise<string> {
     try {
-
-      const { betValue, betAmount, address } = bet;
-
-      const wei = this._lotterySmartContract.getToWei(betAmount);
-      const result = await this._contract.methods.enter().send({
-        from: address,
-        gasPrice: this._lotterySmartContract.getToWei('0.1'),
-        value: wei,
-      });
-
+      const result = await this._lotterySmartContract.enter(bet);
       return result;
     } catch (error) {
       return DefaultErrors.BetError.concat(error);
@@ -62,8 +41,7 @@ export class LotteryService {
   }
 
   async getPlayers(): Promise<string> {
-    const players = await this._contract.methods.getPlayers().call();
+    const players = await this._lotterySmartContract.getPlayers();
     return players;
   }
-
 }
