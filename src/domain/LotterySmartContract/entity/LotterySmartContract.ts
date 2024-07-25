@@ -1,4 +1,4 @@
-import { Bet } from '../interface/Bet';
+import { Bet } from './Bet';
 import ContractDetails from './ContractDetails';
 import Web3Connection from './Web3Connection';
 
