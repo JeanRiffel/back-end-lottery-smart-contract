@@ -1,4 +1,4 @@
-import ContractDetails from '../entity/ContractDetails';
+import ContractDetails from '../domain/LotterySmartContract/entity/ContractDetails';
 
 class ContractDetailsLottery implements ContractDetails {
   public getContractAddress(): string {

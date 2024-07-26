@@ -1,6 +1,6 @@
 import LotterySmartContract from '../entity/LotterySmartContract';
-import ContractDetailsLottery from '../infra/ContractDetailsLottery';
-import Web3Conn from '../infra/Web3Conn';
+import ContractDetailsLottery from '../../../infra/ContractDetailsLottery';
+import Web3Conn from '../../../infra/Web3Conn';
 
 class LotteryFactory {
   getSmartContract(): LotterySmartContract {
