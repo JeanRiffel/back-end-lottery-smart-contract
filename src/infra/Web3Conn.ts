@@ -1,5 +1,5 @@
 import Web3 from 'web3';
-import Web3Connection from '../domain/LotterySmartContract/entity/Web3Connection';
+import Web3Connection from '../domain/lottery-smart-contract/entity/Web3Connection';
 
 class Web3Conn implements Web3Connection {
   private web3: Web3;
