@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { LotteryService } from '../service/lottery.service';
 import { WinnerDTO } from '../dto/winner.dto';
-import { Bet } from '../interface/Bet';
+import { Bet } from '../entity/Bet';
 
 @Controller('lottery')
 export class LotteryController {

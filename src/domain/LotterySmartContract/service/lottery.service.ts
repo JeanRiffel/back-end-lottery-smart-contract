@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import LotterySmartContract from '../entity/LotterySmartContract';
-import { Bet } from '../interface/Bet';
+import { Bet } from '../entity/Bet';
 import { DefaultErrors } from '../utils/enumHelper';
 import LotteryFactory from '../factory/LotteryFactory';
 
