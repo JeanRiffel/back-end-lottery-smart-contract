@@ -1,13 +1,17 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { LotteryService } from '../service/lottery.service';
 import { WinnerDTO } from '../dto/winner.dto';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Bet } from '../entity/Bet';
 
 @Controller('lottery')
+@ApiTags('lottery') 
 export class LotteryController {
   constructor(private readonly lotteryService: LotteryService) {}
 
   @Get('winner')
+  @ApiOperation({ summary: 'Retrieve a winner' })
+  @ApiResponse({ status: 200, description: 'a winner' })
   async pickWinner(): Promise<string> {
     const winner = await this.lotteryService.pickWinner();
 
