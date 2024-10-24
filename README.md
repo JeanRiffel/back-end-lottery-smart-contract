@@ -49,3 +49,7 @@ $ yarn run test:e2e
 # test coverage
 $ yarn run test:cov
 ```
+
+## Run Swagger
+
+http://localhost:3001/api-docs#/
