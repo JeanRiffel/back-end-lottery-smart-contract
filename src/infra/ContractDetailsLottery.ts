@@ -2,7 +2,7 @@ import ContractDetails from '../domain/lottery-smart-contract/entity/ContractDet
 
 class ContractDetailsLottery implements ContractDetails {
   public getContractAddress(): string {
-    return '0x0aE6B04f0FF046b137155013a901A2880878E92c';
+    return '0xF4b9548445D39bA42fddc06c2323b1c040917b17';
   }
 
   public getContractServerProvider(): string {

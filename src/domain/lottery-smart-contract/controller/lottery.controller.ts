@@ -1,8 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, HttpException, Get, Post, Res } from '@nestjs/common';
 import { LotteryService } from '../service/lottery.service';
-import { WinnerDTO } from '../dto/winner.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { Bet } from '../entity/Bet';
+import { Response } from 'express';
 
 @Controller('lottery')
 @ApiTags('lottery') 
@@ -12,23 +11,28 @@ export class LotteryController {
   @Get('winner')
   @ApiOperation({ summary: 'Retrieve a winner' })
   @ApiResponse({ status: 200, description: 'a winner' })
-  async pickWinner(): Promise<string> {
-    const winner = await this.lotteryService.pickWinner();
-
-    return winner;
-  }
-
-  @Post('winner')
-  postWinner(@Body() winnerDTO: WinnerDTO): string {
-    return 'Posted ' + winnerDTO.name;
+  async pickWinner(@Res() response: Response ) {
+    try{
+      const winner = await this.lotteryService.pickWinner();
+      const obj = {winnerPlayer: winner}
+      response.status(200).json(obj);
+    }catch( error ){
+      return response.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
   }
 
   @Post('place-bet')
-  async placeBet(@Body() bet: Bet): Promise<string>{
-    const result = await this.lotteryService.placeBet(bet);
-    return result;
+  async placeBet(@Res() response: Response, @Body() data: any) {
+    try {
+      const players = data.data
+      const result = await this.lotteryService.placeBet(players);
+      const obj = { playersIncluded: result };
+      return response.status(200).json(obj);
+    } catch (error) {
+      return response.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
   }
-
+  
   @Get('contract-name')
   async getContractName(): Promise<string> {
     const contractName = await this.lotteryService.getContractName();
@@ -36,7 +40,7 @@ export class LotteryController {
   }
 
   @Get('players')
-  async getPlayers(): Promise<string> {
+  async getPlayers(): Promise<string[]> {
     const contractName = await this.lotteryService.getPlayers();
     return contractName;
   }
