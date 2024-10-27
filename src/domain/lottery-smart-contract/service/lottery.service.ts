@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { LotterySmartContract } from '../entity/LotterySmartContract';
 import { DefaultErrors } from '../utils/enumHelper';
-import LotteryFactory from '../factory/LotteryFactory';
+import LotterySmartContractFactory from '../factory/LotterySmartContractFactory';
 import { Player } from '../entity/Player';
 
 @Injectable()
@@ -9,17 +9,26 @@ export class LotteryService {
   private _lotterySmartContract: LotterySmartContract;
 
   constructor() {
-    const lotteryFactory = new LotteryFactory();
-    this._lotterySmartContract = lotteryFactory.getSmartContract();
+    const lotterySmartContractFactory = new LotterySmartContractFactory();
+    this._lotterySmartContract = lotterySmartContractFactory
+      .buildSmartContractLottery();
   }
   
+  async placeBet(players: Player[] ): Promise<boolean | any> {
+    try {
+      const result = await this._lotterySmartContract.enter(players);
+      return result
+    } catch (error) {
+      return DefaultErrors.BetError.concat(error);
+    }
+  }
+
   public async pickWinner(): Promise<any> {
     try {
-        const result = await this._lotterySmartContract.pickWinner(); // Use .send() for state-changing calls
+        const result = await this._lotterySmartContract.pickWinner(); 
         return result;
     } catch (error) {
-        
-        throw new Error("Failed to pick winner.");
+      throw new Error("Failed to pick winner.");
     }
   }
   
@@ -29,15 +38,6 @@ export class LotteryService {
       return result;
     } catch (error) {
       return DefaultErrors.RetrieveContractName;
-    }
-  }
-
-  async placeBet(players: Player[] ): Promise<boolean | any> {
-    try {
-      const result = await this._lotterySmartContract.enter(players);
-      return result
-    } catch (error) {
-      return DefaultErrors.BetError.concat(error);
     }
   }
 
