@@ -27,6 +27,7 @@
     "@types/json-bigint": "^1.0.4",
     "@types/web3": "^1.2.2",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "json-bigint": "^1.0.0",
     "jsonc": "^2.0.0",
     "reflect-metadata": "^0.1.13",

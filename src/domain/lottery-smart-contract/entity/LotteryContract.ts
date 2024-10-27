@@ -1,4 +1,3 @@
-import ContractDetails from './ContractDetails';
 import Web3Connection from './Web3Connection';
 import { LotterySmartContract } from './LotterySmartContract';
 import { Player } from './Player';
@@ -9,11 +8,10 @@ class LotteryContract implements LotterySmartContract {
   private _contractAddress: any;
 
   public constructor(
-    contractDetails: ContractDetails,
     web3Conn: Web3Connection,
   ) {
-    const abi = contractDetails.getABI();
-    this._contractAddress = contractDetails.getContractAddress();
+    const abi = ( JSON.parse(process.env.ABI) || [] )  
+    this._contractAddress = process.env.CONTRACT_ADDRESS;
     this._web3 = web3Conn.getConnection();
     this._contract = new this._web3.eth.Contract(abi, this._contractAddress);
   }
@@ -22,7 +20,6 @@ class LotteryContract implements LotterySmartContract {
     const result = await this._contract.methods.contractName().call();
     return result;
   }
-
 
   public async getPlayers(): Promise<string[]> {
     const result = await this._contract.methods.getPlayers().call();
